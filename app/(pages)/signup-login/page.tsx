@@ -1,11 +1,11 @@
+import LoginPage from '@/components/custom_components/signup-login'
+
 import React from 'react'
-import HomePage from '@/components/custom_components/home-page'
 
 export default function page() {
   return (
     <div>
-        <HomePage />
+      <LoginPage />
     </div>
   )
 }
-

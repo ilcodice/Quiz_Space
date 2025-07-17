@@ -1,11 +1,10 @@
 import React from 'react'
-import HomePage from '@/components/custom_components/home-page'
+import ProfilePage from '@/components/custom_components/profile'
 
 export default function page() {
   return (
     <div>
-        <HomePage />
+      <ProfilePage />
     </div>
   )
 }
-

@@ -1,11 +1,10 @@
 import React from 'react'
-import HomePage from '@/components/custom_components/home-page'
+import PlayGame from '@/components/custom_components/play-game'
 
 export default function page() {
   return (
     <div>
-        <HomePage />
+      <PlayGame />
     </div>
   )
 }
-
