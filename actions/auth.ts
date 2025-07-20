@@ -1,6 +1,6 @@
 "use server"
 
-import { auth, signIn, signOut } from "@/auth";
+import { auth, signIn, signOut } from "../auth";
 
 export const signup = async () => {};
 

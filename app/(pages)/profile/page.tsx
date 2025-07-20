@@ -1,5 +1,5 @@
 import React from 'react'
-import ProfilePage from '@/components/custom_components/profile'
+import ProfilePage from '../../../client/src/components/custom_components/profile'
 
 export default function page() {
   return (

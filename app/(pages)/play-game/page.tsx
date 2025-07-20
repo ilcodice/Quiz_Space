@@ -1,5 +1,5 @@
 import React from 'react'
-import PlayGame from '@/components/custom_components/play-game'
+import PlayGame from '../../../client/src/components/custom_components/play-game'
 
 export default function page() {
   return (

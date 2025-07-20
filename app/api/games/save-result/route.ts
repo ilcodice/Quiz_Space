@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { connectToDB } from "@/lib/mongodb";
-import Game from "@/models/Game";
+import { connectToDB } from "../../lib/mongodb";
+import Game from "../../games/models/Game";
 
 export async function POST(req: NextRequest) {
 

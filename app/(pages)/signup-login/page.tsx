@@ -1,4 +1,4 @@
-import LoginPage from '@/components/custom_components/signup-login'
+import LoginPage from '../../../client/src/components/custom_components/signup-login'
 
 import React from 'react'
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import GamesList from '@/components/custom_components/games-list'
+import GamesList from '../../../client/src/components/custom_components/games-list'
 
 export default async function page() {
   let response = await fetch("http://localhost:5001/all-games")

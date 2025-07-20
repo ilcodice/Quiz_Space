@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import Game from "@/models/Game";
-import { connectToDB } from "@/lib/mongodb";
+import Game from "../../games/models/Game";
+import { connectToDB } from "../../lib/mongodb";
 
 export async function GET(req: NextRequest) {
 
