@@ -81,7 +81,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 
   } catch (error) {
     console.error('Login Error:', error);
-    next(new AppError('Something went wrong!', 500));
+    next(new AppError('Something went wrong!!', 500));
   }
 };
 

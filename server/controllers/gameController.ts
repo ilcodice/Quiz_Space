@@ -1,30 +1,58 @@
-import { Request, Response, NextFunction } from 'express';
-import Game from '../models/Game';
-import Question from '../models/Question';
-import Answer from '../models/Answer';
-import { ApiFeatures } from '../utils/apiFeatures';
+import Game from '../models/Game.ts';
+import Question from '../models/Question.ts';
+import Answer from '../models/Answer.ts';
+import ApiFeatures from '../utils/apiFeatures.ts';
+import express from 'express';
+
+const { Request, Response, NextFunction } = express;
 
 export const createGame = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    console.log('Request body:', req.body);
     const { gameDetails, questions } = req.body;
-const { difficulty, startDate, startTime } = gameDetails;
+    const { name, mode, difficulty, startDate, start_time } = gameDetails;
 
-    
-    const game = await Game.create({
-      user_id: req.user._id,
+    const startDateTime = new Date(`${startDate}T${start_time}`);
+    console.log('Parsed startDateTime:', startDateTime);
+
+    console.log('Received gameDetails:', gameDetails); 
+
+    console.log('Creating game with:', { 
+      user: req.user._id,
+      name,
       mode,
       difficulty,
-      startTime: new Date(),
-      startDate: new Date().toISOString()
+      startDate,
+      start_time: startDateTime
     });
 
-    // Create questions for the game
+    const game = await Game.create({
+      user_id: req.user._id,
+      name,
+      mode,
+      difficulty,
+      start_time: startDateTime, // ✅ FIXED
+      startDate,
+    });
+
+    console.log('Game created:', game);
+
     const createdQuestions = await Question.insertMany(
       questions.map((q: any) => ({
-        ...q,
-        game_id: game._id
+        game_id: game._id,
+        text: q.question,
+        difficulty: q.difficulty,
+        choices: {
+          a: q.a,
+          b: q.b,
+          c: q.c,
+          d: q.d
+        },
+        correctAnswer: q.correctAnswer
       }))
     );
+
+    console.log('Questions created:', createdQuestions.length);
 
     res.status(201).json({
       status: 'success',
@@ -34,9 +62,11 @@ const { difficulty, startDate, startTime } = gameDetails;
       }
     });
   } catch (error) {
+    console.error('Detailed error:', error);
     next(error);
   }
 };
+
 
 export const getGameHistory = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -61,4 +91,48 @@ export const getGameHistory = async (req: Request, res: Response, next: NextFunc
   }
 };
 
-// Add other game controller methods...
+export const getGameResults = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const gameId = req.params.id;
+
+    // Example: Find game by id
+    const game = await Game.findById(gameId);
+    if (!game) {
+      return res.status(404).json({ status: 'fail', message: 'Game not found' });
+    }
+
+    // Example: Get questions and answers for the game
+    const questions = await Question.find({ game_id: gameId });
+    const answers = await Answer.find({ game_id: gameId });
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        game,
+        questions,
+        answers
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const submitAnswers = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    // Your logic to handle submitted answers
+    // For example:
+    const { id } = req.params;
+    const { answers } = req.body;
+
+    // Save answers or process the submission here
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Answers submitted successfully',
+      // data: ...
+    });
+  } catch (error) {
+    next(error);
+  }
+};

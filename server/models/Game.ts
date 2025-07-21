@@ -5,6 +5,7 @@ const { Document, Schema, models, model } = mongoose;
 
 export interface IGame extends Document {
     mode: string;
+    name: string;
     user_id: mongoose.Types.ObjectId;
     start_time: Date;
     end_time: Date;
@@ -17,7 +18,8 @@ export interface IGame extends Document {
 const GameSchema: Schema = new Schema<IGame>(
     {
         user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-        mode: { type: String, enum: ['solo', 'multiplayer'], default: 'solo' },
+        name: { type: String },
+        mode: { type: String },
         start_time: { type: Date, required: true },
         end_time: { type: Date },
         max_players: { type: Number, default: 1 },

@@ -881,7 +881,9 @@ export default function CreateQuizGame() {
   const [formData, setFormData] = useState({
     name: '',
     startDate: new Date().toISOString().split('T')[0],
-    startTime: '12:00',
+    start_time: '12:00',
+    mode: 'quiz',
+    difficulty: 'medium',
     questions: Array(10).fill({
       question: '',
       difficulty: 'medium',
@@ -963,7 +965,6 @@ export default function CreateQuizGame() {
     setIsSubmitting(true);
   
     try {
-      // Filter out questions without a question text or empty required fields
       const filteredQuestions = formData.questions.filter(q => 
         q.question.trim() !== '' &&
         q.a.trim() !== '' &&
@@ -978,32 +979,47 @@ export default function CreateQuizGame() {
         return;
       }
   
-      const response = await fetch('http://localhost:5001/games', {
+      console.log('Submitting:', {
+        gameDetails: {
+          name: formData.name,
+          difficulty: filteredQuestions[0].difficulty,
+          startDate: formData.startDate,
+          start_time: formData.start_time, 
+          mode: 'quiz',
+        },
+        questions: filteredQuestions
+      });
+      
+  
+      const response = await fetch('http://localhost:5001/api/games/create-quiz', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
           gameDetails: {
             name: formData.name,
             difficulty: filteredQuestions[0].difficulty,
             startDate: formData.startDate,
-            startTime: formData.startTime,
+            start_time: formData.start_time,
+            mode: formData.mode,
           },
           questions: filteredQuestions,
         }),
       });
   
       const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        const text = await response.text();
-        throw new Error(`Unexpected response: ${text}`);
-      }
-  
-      const data = await response.json();
+      const data = contentType?.includes('application/json') 
+        ? await response.json() 
+        : await response.text();
   
       if (!response.ok) {
-        console.error('Backend error details:', data);
+        console.error('Full error response:', {
+          status: response.status,
+          statusText: response.statusText,
+          data
+        });
         throw new Error(
           data.message || 
           data.error || 
@@ -1011,11 +1027,10 @@ export default function CreateQuizGame() {
         );
       }
   
-      router.push(`/quiz/${data.game._id}`);
-  
+      router.push(`/quiz/${data.data.game._id}`);
     } catch (err) {
-      console.error('Full error details:', err);
-      alert(err.message || 'Failed to create quiz. Check console for details.');
+      console.error('Full error:', err);
+      alert(err instanceof Error ? err.message : 'Unknown error occurred');
     } finally {
       setIsSubmitting(false);
     }
@@ -1216,8 +1231,8 @@ export default function CreateQuizGame() {
                     <Input
                       type="time"
                       id="startTime"
-                      value={formData.startTime}
-                      onChange={(e) => handleGlobalInputChange("startTime", e.target.value)}
+                      value={formData.start_time}
+                      onChange={(e) => handleGlobalInputChange("start_time", e.target.value)}
                       className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500 focus:border-gray-600"
                       required
                     />

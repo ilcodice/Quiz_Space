@@ -1,7 +1,14 @@
-import { FilterQuery } from 'mongoose';
+import mongoose from 'mongoose';
+const { FilterQuery } = mongoose;
 
 class ApiFeatures<T> {
-  constructor(public query: any, public queryString: any) {}
+  public query: any;
+  public queryString: any;
+
+  constructor(query: any, queryString: any) {
+    this.query = query;
+    this.queryString = queryString;
+  }
 
   filter(): this {
     const queryObj = { ...this.queryString };

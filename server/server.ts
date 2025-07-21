@@ -7,7 +7,7 @@ import cors from 'cors';
 import routes from './app.ts';
 import userRouter from './routes/userRoutes.ts';
 import cookieParser from 'cookie-parser';
-
+import gameRoutes from './routes/gameRoutes.ts'; 
 // Create express app
 const app = express();
 
@@ -41,6 +41,7 @@ const cookieOptions = {
 app.use('/api', routes);
 app.use('/api/auth', authRoutes);
 app.use('/api', userRouter); 
+app.use('/api/games', gameRoutes);
 // After all routes
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);

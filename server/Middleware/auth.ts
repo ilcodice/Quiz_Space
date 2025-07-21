@@ -62,9 +62,10 @@
 
 
 // server/middleware/auth.ts
-import { Request, Response, NextFunction } from 'express';
+import express from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import User from '../models/User';
+import User from '../models/User.ts';
 
 export const protect = async (req: Request, res: Response, next: NextFunction) => {
   try {

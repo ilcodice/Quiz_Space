@@ -1,5 +1,4 @@
 import express from 'express';
-import { protect } from '../middleware/auth.ts';
 import {
   createGame,
   getGameHistory,
@@ -7,17 +6,17 @@ import {
   getGameResults
 } from '../controllers/gameController.ts';
 
+import { protect } from '../middleware/auth.ts';
+
 const router = express.Router();
 
-
-
-router.use(protect);
+router.use(protect); // protects all routes below
 
 router.route('/')
-  .post(createGame)
+    // POST /api/games/
   .get(getGameHistory);
 
-router.post('/create-quiz', protect, createGame);
+router.post('/create-quiz', createGame); // POST /api/games/create-quiz
 
 router.route('/:id/answers')
   .post(submitAnswers);
