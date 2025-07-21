@@ -1,13 +1,11 @@
 import React from 'react'
-import GamesList from '../../../client/src/components/custom_components/games-list'
+import GamesList from '../../../client/src/components/custom_components/games-list.tsx'
 
-export default async function page() {
-  let response = await fetch("http://localhost:5001/all-games")
-  let games = await response.json()
-  console.log(games)
+export default function page() {
   return (
     <div>
-      games
+      <GamesList />
     </div>
   )
 }
+

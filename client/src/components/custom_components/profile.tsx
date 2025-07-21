@@ -350,11 +350,10 @@
 //   )
 // }
 
-
 "use client";
 
-import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Input } from "../ui/input";
@@ -403,10 +402,10 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch('http://localhost:5001/api/profile', {
-          credentials: 'include',
+        const res = await fetch("http://localhost:5001/api/profile", {
+          credentials: "include",
         });
-        if (!res.ok) throw new Error('Unauthorized');
+        if (!res.ok) throw new Error("Unauthorized");
         const data = await res.json();
         setProfileData(data.data.user);
         setEditData(data.data.user);
@@ -421,27 +420,26 @@ export default function ProfilePage() {
 
   const handleSignOut = async () => {
     try {
-      const res = await fetch('http://localhost:5001/api/auth/logout', {
-        method: 'GET',
-        credentials: 'include',
+      const res = await fetch("http://localhost:5001/api/auth/logout", {
+        method: "GET",
+        credentials: "include",
       });
-      console.log('Signout status:', res.status);
+      console.log("Signout status:", res.status);
       const text = await res.text();
-      console.log('Signout response text:', text);
-  
+      console.log("Signout response text:", text);
+
       if (res.ok) {
         setProfileData(null);
         setEditData(null);
-        router.push('/signup-login');
+        router.push("/signup-login");
       } else {
-        alert('Failed signout: ' + text);
+        alert("Failed signout: " + text);
       }
     } catch (error) {
-      console.error('Signout error:', error);
-      alert('Failed signout: Network error');
+      console.error("Signout error:", error);
+      alert("Failed signout: Network error");
     }
   };
-
 
   const handleEdit = () => {
     setOriginalProfileData(profileData);
@@ -460,16 +458,16 @@ export default function ProfilePage() {
   const handleSave = async () => {
     try {
       const res = await fetch(`http://localhost:5001/api/profile`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify(editData),
       });
 
       if (!res.ok) {
-        throw new Error('Failed to update profile');
+        throw new Error("Failed to update profile");
       }
 
       const data = await res.json();
@@ -478,7 +476,7 @@ export default function ProfilePage() {
       setIsEditing(false);
     } catch (err) {
       console.error(err);
-      alert('Could not save changes.');
+      alert("Could not save changes.");
     }
   };
 
@@ -520,9 +518,7 @@ export default function ProfilePage() {
   };
 
   if (loading) {
-    return (
-      <div className="text-center mt-10">Loading...</div>
-    );
+    return <div className="text-center mt-10">Loading...</div>;
   }
 
   if (!profileData) {
@@ -544,7 +540,10 @@ export default function ProfilePage() {
               <div className="flex flex-col items-center space-y-4">
                 <div className="relative">
                   <Avatar className="h-32 w-32">
-                    <AvatarImage src={isEditing ? editData.avatar : profileData.avatar} alt="Profile" />
+                    <AvatarImage
+                      src={isEditing ? editData.avatar : profileData.avatar}
+                      alt="Profile"
+                    />
                     <AvatarFallback className="bg-gray-800 text-white text-2xl">
                       {profileData.user_name
                         .split(" ")
@@ -553,7 +552,10 @@ export default function ProfilePage() {
                     </AvatarFallback>
                   </Avatar>
                   {isEditing && (
-                    <Dialog open={isAvatarDialogOpen} onOpenChange={setIsAvatarDialogOpen}>
+                    <Dialog
+                      open={isAvatarDialogOpen}
+                      onOpenChange={setIsAvatarDialogOpen}
+                    >
                       <DialogTrigger asChild>
                         <Button
                           size="sm"
@@ -564,7 +566,9 @@ export default function ProfilePage() {
                       </DialogTrigger>
                       <DialogContent className="bg-gray-900 border-gray-800 max-w-2xl">
                         <DialogHeader>
-                          <DialogTitle className="text-white">Choose Your Avatar</DialogTitle>
+                          <DialogTitle className="text-white">
+                            Choose Your Avatar
+                          </DialogTitle>
                           <DialogDescription className="text-gray-400">
                             Select an avatar style from Dicebear
                           </DialogDescription>
@@ -578,10 +582,18 @@ export default function ProfilePage() {
                                 onClick={() => handleAvatarSelect(style)}
                               >
                                 <Avatar className="h-16 w-16">
-                                  <AvatarImage src={generateRandomAvatar(style) || "/placeholder.svg"} alt={style} />
+                                  <AvatarImage
+                                    src={
+                                      generateRandomAvatar(style) ||
+                                      "/placeholder.svg"
+                                    }
+                                    alt={style}
+                                  />
                                 </Avatar>
                               </Button>
-                              <p className="text-xs text-gray-400 capitalize">{style.replace("-", " ")}</p>
+                              <p className="text-xs text-gray-400 capitalize">
+                                {style.replace("-", " ")}
+                              </p>
                             </div>
                           ))}
                         </div>
@@ -604,7 +616,9 @@ export default function ProfilePage() {
                         <Input
                           id="name"
                           value={editData.user_name}
-                          onChange={(e) => handleInputChange("user_name", e.target.value)}
+                          onChange={(e) =>
+                            handleInputChange("user_name", e.target.value)
+                          }
                           className="bg-gray-800 border-gray-700 text-white"
                         />
                       </div>
@@ -615,7 +629,9 @@ export default function ProfilePage() {
                         <Input
                           id="username"
                           value={editData.user_name}
-                          onChange={(e) => handleInputChange("user_name", e.target.value)}
+                          onChange={(e) =>
+                            handleInputChange("user_name", e.target.value)
+                          }
                           className="bg-gray-800 border-gray-700 text-white"
                         />
                       </div>
@@ -628,7 +644,9 @@ export default function ProfilePage() {
                         id="email"
                         type="email"
                         value={editData.email}
-                        onChange={(e) => handleInputChange("email", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("email", e.target.value)
+                        }
                         className="bg-gray-800 border-gray-700 text-white"
                       />
                     </div>
@@ -639,7 +657,9 @@ export default function ProfilePage() {
                       <Textarea
                         id="bio"
                         value={editData.bio}
-                        onChange={(e) => handleInputChange("bio", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("bio", e.target.value)
+                        }
                         className="bg-gray-800 border-gray-700 text-white"
                       />
                     </div>
@@ -650,7 +670,9 @@ export default function ProfilePage() {
                       <Input
                         id="location"
                         value={editData.location}
-                        onChange={(e) => handleInputChange("location", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("location", e.target.value)
+                        }
                         className="bg-gray-800 border-gray-700 text-white"
                       />
                     </div>
@@ -666,7 +688,9 @@ export default function ProfilePage() {
                   </div>
                 ) : (
                   <>
-                    <h1 className="text-3xl font-bold text-white">{profileData.user_name}</h1>
+                    <h1 className="text-3xl font-bold text-white">
+                      {profileData.user_name}
+                    </h1>
                     <p className="text-gray-400">{profileData.bio}</p>
                     <div className="flex space-x-4 text-gray-400">
                       <div className="flex items-center space-x-1">
@@ -726,7 +750,6 @@ export default function ProfilePage() {
     </div>
   );
 }
-
 
 // export default function ProfilePage() {
 //   const [isEditing, setIsEditing] = useState(false)

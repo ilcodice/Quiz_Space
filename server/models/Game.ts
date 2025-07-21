@@ -18,7 +18,7 @@ export interface IGame extends Document {
 const GameSchema: Schema = new Schema<IGame>(
     {
         user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-        name: { type: String },
+        name: { type: String , required: true},
         mode: { type: String },
         start_time: { type: Date, required: true },
         end_time: { type: Date },

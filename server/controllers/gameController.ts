@@ -67,6 +67,31 @@ export const createGame = async (req: Request, res: Response, next: NextFunction
   }
 };
 
+export const getAllGames = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    console.log('📥 Received GET /api/games/all request');
+    // In your backend controller
+    const games = await Game.find().populate('user_id', 'email');
+    console.log('First game example:', games[0] ? games[0] : 'No games found');
+
+    console.log('🎮 Found games:', games.length);
+    games.forEach((g, i) => console.log(`Game ${i + 1}:`, g.name));
+
+    res.status(200).json({
+      status: 'success',
+      results: games.length,
+      data: {
+        games,  // This means frontend should access data.data.games
+      },
+    });
+  } catch (error) {
+    console.error('💥 Backend error in getAllGames:', error);
+    next(error);
+  }
+};
+
+
+
 
 export const getGameHistory = async (req: Request, res: Response, next: NextFunction) => {
   try {

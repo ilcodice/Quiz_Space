@@ -8,6 +8,7 @@ import routes from './app.ts';
 import userRouter from './routes/userRoutes.ts';
 import cookieParser from 'cookie-parser';
 import gameRoutes from './routes/gameRoutes.ts'; 
+
 // Create express app
 const app = express();
 
@@ -38,13 +39,20 @@ const cookieOptions = {
 };
 
 
-app.use('/api', routes);
+app.use('/api', routes); // Probably general routes
 app.use('/api/auth', authRoutes);
 app.use('/api', userRouter); 
-app.use('/api/games', gameRoutes);
+app.use('/api/games', gameRoutes); // ✅ Add this
+
+
+
+
+
 // After all routes
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
+  console.log(`📥 ${req.method} ${req.originalUrl}`);
+
   res.status(500).json({
     status: 'error',
     message: 'Something went wrong!'
@@ -73,5 +81,3 @@ connectToDatabase()
     process.exit(1);
   });
 
-
-  
