@@ -2,8 +2,19 @@
 import express from 'express';
 import { getProfile, updateProfile } from '../controllers/userController.ts';
 import { protect } from '../Middleware/protect.ts';
-
+import { verifyToken } from '../Middleware/verifyToken.ts';
 const router = express.Router();
+
+
+router.get('/check', verifyToken, (req, res) => {
+  return res.status(200).json({
+    user: {
+      user_name: req.user.user_name,
+      email: req.user.email,
+    },
+  });
+});
+
 
 router.use(protect); // Protect all routes below
 

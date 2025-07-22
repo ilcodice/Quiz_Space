@@ -82,7 +82,7 @@ const AllGamesPage = () => {
 
   return (
     <div className="flex justify-center">
-      <div className="bg-black p-6 w-full max-w-7xl">
+      <div className="bg-black/50 p-6 w-full max-w-7xl">
         <div className="mx-auto">
           <div className="mb-8 flex justify-between items-center">
             <h1 className="text-3xl font-bold text-white">All Games</h1>
@@ -96,12 +96,15 @@ const AllGamesPage = () => {
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {games.map((game) => (
               <Card key={game._id} className="bg-gray-900 border-gray-800 relative">
-                <Button
-                  size="sm"
-                  className="absolute top-4 right-4 bg-gray-800 hover:bg-gray-700 text-white p-2 h-8 w-8"
-                >
-                  <Play className="h-4 w-4" />
-                </Button>
+                <Link href={`/play-game?id=${game._id}`}>
+                  <Button
+                    size="sm"
+                    className="absolute top-4 right-4 bg-gray-800 hover:bg-gray-700 text-white p-2 h-8 w-8"
+                  >
+                    <Play className="h-4 w-4" />
+                  </Button>
+              </Link>
+
 
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between pr-12">

@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
@@ -13,12 +13,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Home, User, Settings, LogOut, Menu, X, Gamepad2 } from "lucide-react";
+import {
+  Home,
+  User,
+  Settings,
+  LogOut,
+  Menu,
+  X,
+  Gamepad2,
+} from "lucide-react";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<any>(null);
   const router = useRouter();
 
   const toggleMobileMenu = () => {
@@ -27,37 +35,35 @@ export default function Navbar() {
 
   useEffect(() => {
     const checkAuth = async () => {
-      try {
-        const response = await fetch("http://localhost:5001/auth/check", {
-          credentials: "include",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setIsLoggedIn(true);
-          setUser(data.user);
-        } else {
+      const token = localStorage.getItem("token");
+        if (!token) return;
+  
+        try {
+          const res = await fetch("http://localhost:5001/auth/check", {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          });
+  
+          if (res.ok) {
+            setIsLoggedIn(true);
+          } else {
+            setIsLoggedIn(false);
+          }
+        } catch (err) {
+          console.error("Auth check failed", err);
           setIsLoggedIn(false);
-          setUser(null);
         }
-      } catch (error) {
-        setIsLoggedIn(false);
-        setUser(null);
-      }
-    };
-
-    checkAuth();
-  }, []);
+      };
+  
+      checkAuth();
+    }, []);
+  
+  
 
   const handleProfileClick = () => {
-    if (isLoggedIn) {
-      router.push("/profile");
-    } else {
-      router.push("/signup-login");
-    }
+    router.push(isLoggedIn ? "/profile" : "/signup-login");
     setIsMobileMenuOpen(false);
   };
 
@@ -73,7 +79,7 @@ export default function Navbar() {
             <div className="text-xl font-bold text-white">Quiz Space</div>
           </div>
 
-          {/* Desktop Navigation */}
+          {/* Desktop Nav */}
           <div className="hidden md:flex items-center space-x-8">
             <Button asChild variant="ghost" className="text-gray-300 hover:text-white hover:bg-gray-800 flex items-center gap-2">
               <Link href="/"><Home className="h-4 w-4" />Home</Link>
@@ -83,25 +89,29 @@ export default function Navbar() {
               <Link href="/all-games"><Gamepad2 className="h-4 w-4" />Games</Link>
             </Button>
 
-            <Button asChild variant="ghost" className="text-gray-300 hover:text-white hover:bg-gray-800 flex items-center gap-2">
-              <Link href="/create-quiz-game">Create Game</Link>
-            </Button>
+            {isLoggedIn && (
+              <>
+                <Button asChild variant="ghost" className="text-gray-300 hover:text-white hover:bg-gray-800 flex items-center gap-2">
+                  <Link href="/create-quiz-game">Create Game</Link>
+                </Button>
 
-            <Button asChild variant="ghost" className="text-gray-300 hover:text-white hover:bg-gray-800 flex items-center gap-2">
-              <Link href="/profile"><User className="h-4 w-4" />Profile</Link>
-            </Button>
+                <Button asChild variant="ghost" className="text-gray-300 hover:text-white hover:bg-gray-800 flex items-center gap-2">
+                  <Link href="/profile"><User className="h-4 w-4" />Profile</Link>
+                </Button>
+              </>
+            )}
           </div>
 
-          {/* Profile Dropdown */}
+          {/* Avatar / Sign In */}
           <div className="hidden md:flex items-center">
             {isLoggedIn && user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                     <Avatar className="h-10 w-10">
-                      <AvatarImage src={user.profile_image || "/placeholder.svg"} alt="Profile" />
+                      <AvatarImage src={user.profile_image || "/placeholder.svg"} />
                       <AvatarFallback className="bg-gray-800 text-white">
-                        {user.user_name?.charAt(0)?.toUpperCase() || "?"}
+                        {user.user_name?.charAt(0).toUpperCase() || "?"}
                       </AvatarFallback>
                     </Avatar>
                   </Button>
@@ -136,7 +146,7 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Icon */}
           <div className="md:hidden">
             <Button
               variant="ghost"
@@ -148,54 +158,43 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Nav */}
         {isMobileMenuOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 border-t border-gray-800">
-              <Button variant="ghost" className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-800">
-                <Home className="mr-3 h-4 w-4" />
-                Home
-              </Button>
+              <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>
+                <Button variant="ghost" className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-800">
+                  <Home className="mr-3 h-4 w-4" />
+                  Home
+                </Button>
+              </Link>
 
-              <Button variant="ghost" className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-800">
-                <Gamepad2 className="mr-3 h-4 w-4" />
-                Games
-              </Button>
+              <Link href="/all-games" onClick={() => setIsMobileMenuOpen(false)}>
+                <Button variant="ghost" className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-800">
+                  <Gamepad2 className="mr-3 h-4 w-4" />
+                  Games
+                </Button>
+              </Link>
 
-              <Button variant="ghost" className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-800">
-                Create
-              </Button>
+              {isLoggedIn ? (
+                <>
+                  <Link href="/create-quiz-game" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Button variant="ghost" className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-800">
+                      Create Game
+                    </Button>
+                  </Link>
 
-              {isLoggedIn && user && (
-                <div className="pt-4 border-t border-gray-800">
-                  <div className="flex items-center px-3 py-2">
-                    <Avatar className="h-10 w-10 mr-3">
-                      <AvatarImage src={user.profile_image || "/placeholder.svg"} alt="Profile" />
-                      <AvatarFallback className="bg-gray-800 text-white">
-                        {user.user_name?.charAt(0)?.toUpperCase() || "?"}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <div className="text-sm font-medium text-white">{user.user_name}</div>
-                      <div className="text-xs text-gray-400">{user.email}</div>
-                    </div>
-                  </div>
-
-                  <Button variant="ghost" onClick={handleProfileClick} className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-800">
-                    <User className="mr-3 h-4 w-4" />
-                    Profile
-                  </Button>
-
-                  <Button variant="ghost" className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-800">
-                    <Settings className="mr-3 h-4 w-4" />
-                    Settings
-                  </Button>
-
-                  <Button variant="ghost" className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-800">
-                    <LogOut className="mr-3 h-4 w-4" />
-                    Log out
-                  </Button>
-                </div>
+                  <Link href="/profile" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Button variant="ghost" className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-800">
+                      <User className="mr-3 h-4 w-4" />
+                      Profile
+                    </Button>
+                  </Link>
+                </>
+              ) : (
+                <Button onClick={handleProfileClick} variant="ghost" className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-800">
+                  Sign In
+                </Button>
               )}
             </div>
           </div>
@@ -204,9 +203,6 @@ export default function Navbar() {
     </nav>
   );
 }
-
-
-
 
 
 

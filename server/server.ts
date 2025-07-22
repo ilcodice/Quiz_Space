@@ -8,7 +8,7 @@ import routes from './app.ts';
 import userRouter from './routes/userRoutes.ts';
 import cookieParser from 'cookie-parser';
 import gameRoutes from './routes/gameRoutes.ts'; 
-
+import userRouters from './routes/userRoutes.ts';
 // Create express app
 const app = express();
 
@@ -43,6 +43,8 @@ app.use('/api', routes); // Probably general routes
 app.use('/api/auth', authRoutes);
 app.use('/api', userRouter); 
 app.use('/api/games', gameRoutes); // ✅ Add this
+
+app.use('/auth', userRouters);
 
 
 

@@ -90,6 +90,21 @@ export const getAllGames = async (req: Request, res: Response, next: NextFunctio
   }
 };
 
+export const playGame = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const gameId = req.params.id;
+    const game = await Game.findById(gameId);
+    if (!game) {
+      return res.status(404).json({ status: 'fail', message: 'Game not found' });
+    }
+    res.status(200).json({
+      status: 'success',
+      data: game
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 
 

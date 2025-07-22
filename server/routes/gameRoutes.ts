@@ -4,7 +4,8 @@ import {
   getGameHistory,
   submitAnswers,
   getGameResults,
-  getAllGames
+  getAllGames,
+  playGame
 } from '../controllers/gameController.ts';
 
 import { protect } from '../middleware/auth.ts';
@@ -20,6 +21,9 @@ router.route('/')
     // POST /api/games/
   .get(getGameHistory);
 
+
+
+router.get('/:id', playGame);
 
 router.post('/create-quiz', createGame); // POST /api/games/create-quiz
 
