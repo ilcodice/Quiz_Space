@@ -60,26 +60,39 @@ const handleLogin = async (e: React.FormEvent) => {
       credentials: 'include', // For cookies
       body: JSON.stringify({
         email: formData.email,
-        password: formData.password // Ensure case-sensitive
+        password: formData.password,
       }),
     });
 
     const data = await res.json();
     console.log('Login Response:', data);
 
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.data.user));
+    window.dispatchEvent(new Event("auth-change")); // 🔥 Notify Navbar
+    router.push("/profile");
+
+
     if (!res.ok) {
       throw new Error(data.message || 'Login failed');
     }
 
+    // Save token and user to localStorage
+    localStorage.setItem('token', data.token);
     localStorage.setItem('user', JSON.stringify(data.data.user));
+
+    // Optionally update your logged-in state if accessible here
+    // e.g. setIsLoggedIn(true);
+    // setUser(data.data.user);
+
     router.push('/profile');
-    
   } catch (err) {
     toast.error(err instanceof Error ? err.message : 'Login failed');
   } finally {
     setIsLoading(false);
   }
 };
+
 
 
 // Updated handleRegister function

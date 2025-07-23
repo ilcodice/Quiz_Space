@@ -1,10 +1,9 @@
+import express from 'express';
+const { Request, Response } = express;
 import Game from '../models/Game.ts';
 import Question from '../models/Question.ts';
 import Answer from '../models/Answer.ts';
 import ApiFeatures from '../utils/apiFeatures.ts';
-import express from 'express';
-
-const { Request, Response, NextFunction } = express;
 
 export const createGame = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -14,8 +13,6 @@ export const createGame = async (req: Request, res: Response, next: NextFunction
 
     const startDateTime = new Date(`${startDate}T${start_time}`);
     console.log('Parsed startDateTime:', startDateTime);
-
-    console.log('Received gameDetails:', gameDetails); 
 
     console.log('Creating game with:', { 
       user: req.user._id,
@@ -31,7 +28,7 @@ export const createGame = async (req: Request, res: Response, next: NextFunction
       name,
       mode,
       difficulty,
-      start_time: startDateTime, // ✅ FIXED
+      start_time: startDateTime,
       startDate,
     });
 
@@ -67,10 +64,26 @@ export const createGame = async (req: Request, res: Response, next: NextFunction
   }
 };
 
+export const getGameQuestions = async (req: Request, res: Response) => {
+  try {
+    const gameId = req.params.id;
+    // Fetch questions separately since 'questions' is not a field in the Game model by default
+    const questions = await Question.find({ game_id: gameId });
+
+    if (!questions || questions.length === 0) {
+      return res.status(404).json({ message: 'No questions found for this game' });
+    }
+
+    res.status(200).json(questions);
+  } catch (error) {
+    console.error('Error fetching game questions:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 export const getAllGames = async (req: Request, res: Response, next: NextFunction) => {
   try {
     console.log('📥 Received GET /api/games/all request');
-    // In your backend controller
     const games = await Game.find().populate('user_id', 'email');
     console.log('First game example:', games[0] ? games[0] : 'No games found');
 
@@ -81,7 +94,7 @@ export const getAllGames = async (req: Request, res: Response, next: NextFunctio
       status: 'success',
       results: games.length,
       data: {
-        games,  // This means frontend should access data.data.games
+        games,
       },
     });
   } catch (error) {
@@ -105,8 +118,6 @@ export const playGame = async (req: Request, res: Response, next: NextFunction) 
     next(error);
   }
 };
-
-
 
 export const getGameHistory = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -135,13 +146,11 @@ export const getGameResults = async (req: Request, res: Response, next: NextFunc
   try {
     const gameId = req.params.id;
 
-    // Example: Find game by id
     const game = await Game.findById(gameId);
     if (!game) {
       return res.status(404).json({ status: 'fail', message: 'Game not found' });
     }
 
-    // Example: Get questions and answers for the game
     const questions = await Question.find({ game_id: gameId });
     const answers = await Answer.find({ game_id: gameId });
 
@@ -160,12 +169,10 @@ export const getGameResults = async (req: Request, res: Response, next: NextFunc
 
 export const submitAnswers = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    // Your logic to handle submitted answers
-    // For example:
     const { id } = req.params;
     const { answers } = req.body;
 
-    // Save answers or process the submission here
+    // TODO: add logic to save/process submitted answers here
 
     res.status(200).json({
       status: 'success',

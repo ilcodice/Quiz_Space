@@ -34,32 +34,43 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    const checkAuth = async () => {
+    const loadUser = () => {
       const token = localStorage.getItem("token");
-        if (!token) return;
+      const storedUser = localStorage.getItem("user");
+      if (token && storedUser) {
+        setIsLoggedIn(true);
+        setUser(JSON.parse(storedUser));
+      } else {
+        setIsLoggedIn(false);
+        setUser(null);
+      }
+    };
   
-        try {
-          const res = await fetch("http://localhost:5001/auth/check", {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          });
+    loadUser();
   
-          if (res.ok) {
-            setIsLoggedIn(true);
-          } else {
-            setIsLoggedIn(false);
-          }
-        } catch (err) {
-          console.error("Auth check failed", err);
-          setIsLoggedIn(false);
-        }
-      };
+    const handleAuthChange = () => {
+      loadUser();
+    };
   
-      checkAuth();
-    }, []);
+    window.addEventListener("auth-change", handleAuthChange); // 👈 Listen for custom event
   
+    return () => {
+      window.removeEventListener("auth-change", handleAuthChange);
+    };
+  }, []);
+  
+  
+  
+  
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.dispatchEvent(new Event("auth-change")); // 🔥 Notify Navbar
+    router.push('/');
+
+
+
+  };
   
 
   const handleProfileClick = () => {
@@ -98,6 +109,10 @@ export default function Navbar() {
                 <Button asChild variant="ghost" className="text-gray-300 hover:text-white hover:bg-gray-800 flex items-center gap-2">
                   <Link href="/profile"><User className="h-4 w-4" />Profile</Link>
                 </Button>
+
+                <Button onClick={handleLogout} variant="ghost" className="text-gray-300 hover:text-white hover:bg-gray-800 flex items-center gap-2">
+                  <LogOut className="h-4 w-4" />Logout
+                </Button>
               </>
             )}
           </div>
@@ -126,7 +141,7 @@ export default function Navbar() {
                   <DropdownMenuSeparator className="bg-gray-800" />
                   <DropdownMenuItem onClick={handleProfileClick} className="text-gray-300 hover:text-white hover:bg-gray-800 cursor-pointer">
                     <User className="mr-2 h-4 w-4" />
-                    <span>Profile</span>
+                    <Link href="/profile"><span>Profile</span></Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem className="text-gray-300 hover:text-white hover:bg-gray-800 cursor-pointer">
                     <Settings className="mr-2 h-4 w-4" />
@@ -134,7 +149,7 @@ export default function Navbar() {
                   </DropdownMenuItem>
                   <DropdownMenuSeparator className="bg-gray-800" />
                   <DropdownMenuItem className="text-gray-300 hover:text-white hover:bg-gray-800 cursor-pointer">
-                    <LogOut className="mr-2 h-4 w-4" />
+                    <LogOut onClick={handleLogout} className="mr-2 h-4 w-4" />
                     <span>Log out</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>

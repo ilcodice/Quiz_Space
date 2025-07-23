@@ -12,7 +12,6 @@ export interface IGame extends Document {
     max_players: number;
     difficulty: string;
     startDate: string;
-    score: number;
 }
 
 const GameSchema: Schema = new Schema<IGame>(

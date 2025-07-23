@@ -8,12 +8,12 @@ import {
   playGame
 } from '../controllers/gameController.ts';
 
-import { protect } from '../middleware/auth.ts';
+import { protect } from '../Middleware/auth.ts';
+import { getGameQuestions } from '../controllers/gameController.ts';
 
 const router = express.Router();
 
-router.get('/all', getAllGames); // ✅ Add this above .use(protect) if public access is okay
-
+router.get('/all', getAllGames); 
 
 router.use(protect); // protects all routes below
 
@@ -22,8 +22,11 @@ router.route('/')
   .get(getGameHistory);
 
 
+router.get('/:id/questions', getGameQuestions);
+
 
 router.get('/:id', playGame);
+
 
 router.post('/create-quiz', createGame); // POST /api/games/create-quiz
 

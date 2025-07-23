@@ -7,8 +7,7 @@ import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { ArrowLeft, Trophy } from "lucide-react";
-import { useSearchParams } from 'next/navigation';
-import Link from 'next/link';
+import { useSearchParams } from "next/navigation";
 
 
 type Choice = {
@@ -24,44 +23,47 @@ type Question = {
 };
 
 export default function QuizGame() {
+  const searchParams = useSearchParams();            
+  const gameId = searchParams.get("id"); 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showResult, setShowResult] = useState(false);
-  const [gameCompleted, setGameCompleted] = useState(false);
-
-  const searchParams = useSearchParams();
-  const gameId = searchParams.get("id");
+  const [gameCompleted, setGameCompleted] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!gameId) return;
-  
-    const fetchQuestions = async () => {
+    async function fetchGameAndQuestions() {
       try {
-        const res = await fetch(`http://localhost:5001/api/games/${gameId}/results`, {
-          credentials: "include",
+        const gameRes = await fetch(`http://localhost:5001/api/games/${gameId}`, {
+          credentials: 'include',
         });
+        
+        const gameData = await gameRes.json();
   
-        if (!res.ok) {
-          console.error("Failed to fetch game results:", res.status);
+        const questionsRes = await fetch(`http://localhost:5001/api/games/${gameId}/questions`, {
+          credentials: 'include',
+        });
+        
+        
+        const questionsData = await questionsRes.json();
+  
+        if (!Array.isArray(questionsData)) {
+          console.error('Expected an array of questions but got:', questionsData);
           return;
         }
   
-        const data = await res.json();
-        console.log("Fetched game results data:", data);
-  
-        const questions = data.data.questions || [];
-        setQuestions(questions.slice(0, 10));
+        setGameCompleted(gameData.completed);
+        setQuestions(questionsData);
       } catch (error) {
-        console.error("Error fetching questions:", error);
+        console.error('Error fetching game or questions:', error);
       }
-    };
+    }
   
-    fetchQuestions();
+    fetchGameAndQuestions();
   }, [gameId]);
   
-
+  
 
   if (questions.length === 0) {
     return <div className="text-center p-8 text-white">Loading questions...</div>;
@@ -103,7 +105,7 @@ export default function QuizGame() {
 
   if (gameCompleted) {
     return (
-      <div className="bg-black/10 p-6 flex items-center justify-center">
+      <div className="bg-black p-6 flex items-center justify-center">
         <Card className="bg-gray-900 border-gray-800 w-full max-w-md text-center">
           <CardContent className="p-8">
             <Trophy className="h-16 w-16 text-yellow-500 mx-auto mb-4" />
@@ -116,11 +118,9 @@ export default function QuizGame() {
               <Button onClick={resetGame} className="flex-1 bg-gray-800 hover:bg-gray-700 text-white">
                 Play Again
               </Button>
-             <Link href="/">
-                <Button variant="outline" className="flex-1 bg-transparent border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white">
-                  Exit Game
-                </Button>
-              </Link>
+              <Button variant="outline" className="flex-1 bg-transparent border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white">
+                Exit Game
+              </Button>
             </div>
           </CardContent>
         </Card>

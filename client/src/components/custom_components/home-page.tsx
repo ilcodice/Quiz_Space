@@ -8,6 +8,7 @@ import { useRef } from "react"
 import { useFrame } from "@react-three/fiber"
 import type { Mesh } from "three"
 import { Play, Plus, Gamepad2 } from "lucide-react"
+import Link from "next/link"
 
 // 3D Quiz Elements Component
 function QuizElements() {
@@ -169,10 +170,12 @@ export default function HomePage() {
 
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-4 pt-6">
-                <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg">
-                  <Play className="mr-2 h-5 w-5" />
-                  See All Games
-                </Button>
+                <Link href="/all-games">
+                  <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg">
+                    <Play className="mr-2 h-5 w-5" />
+                    See All Games
+                  </Button>
+                </Link>
 
                 <Button
                   size="lg"

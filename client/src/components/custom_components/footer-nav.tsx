@@ -97,7 +97,7 @@ export default function Footer() {
               <div className="space-y-3">
                 <div className="flex items-center gap-3 text-gray-400">
                   <Mail className="h-4 w-4" />
-                  <span className="text-sm">support@quizmaster.com</span>
+                  <span className="text-sm">support@quizspace.com</span>
                 </div>
                 <div className="flex items-center gap-3 text-gray-400">
                   <Phone className="h-4 w-4" />

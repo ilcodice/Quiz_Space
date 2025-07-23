@@ -431,6 +431,9 @@ export default function ProfilePage() {
       if (res.ok) {
         setProfileData(null);
         setEditData(null);
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.dispatchEvent(new Event("auth-change")); 
         router.push("/signup-login");
       } else {
         alert("Failed signout: " + text);
