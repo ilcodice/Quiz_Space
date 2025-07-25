@@ -10,7 +10,7 @@ import { Eye, EyeOff, Github, Mail } from "lucide-react"
 import { toast } from "sonner" // or your preferred toast library
 import { loginSchema, registerSchema } from "../../lib/validations/user"
 import { z } from "zod"
-import { loginWithGoogle } from '../../actions/auth'
+// import { loginWithGoogle } from '../../actions/auth'
 
 export default function Page() {
   const router = useRouter()
@@ -189,7 +189,7 @@ const handleRegister = async (e: React.FormEvent) => {
                       <Button
                           type="button"
                           variant="outline"
-                          onClick={() => loginWithGoogle()}
+                          // onClick={() => loginWithGoogle()}
                         >
                           <Mail className="mr-2 h-4 w-4" />
                           Google
@@ -295,7 +295,7 @@ const handleRegister = async (e: React.FormEvent) => {
                       <Button
                           type="button"
                           variant="outline"
-                          onClick={() => loginWithGoogle()}
+                          // onClick={() => loginWithGoogle()}
                         >
                           <Mail className="mr-2 h-4 w-4 " />
                           Google
