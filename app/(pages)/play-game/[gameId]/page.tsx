@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button } from "../../../../client/src/components/ui/button";
-import { Card, CardContent } from "../../../../client/src/components/ui/card";
-import { Badge } from "../../../../client/src/components/ui/badge";
+import { Button } from "../../../../src/components/ui/button";
+import { Card, CardContent } from "../../../../src/components/ui/card";
+import { Badge } from "../../../../src/components/ui/badge";
 import { ArrowLeft, Trophy } from "lucide-react";
 import React from "react";
 import { useParams, useRouter } from "next/navigation";
@@ -56,7 +56,9 @@ export default function QuizGame() {
   }, [gameId]);
 
   if (loading) {
-    return <div className="text-center p-8 text-white">Loading questions...</div>;
+    return (
+      <div className="text-center p-8 text-white">Loading questions...</div>
+    );
   }
 
   if (error) {
@@ -64,7 +66,11 @@ export default function QuizGame() {
   }
 
   if (questions.length === 0) {
-    return <div className="text-center p-8 text-white">No questions available for this game.</div>;
+    return (
+      <div className="text-center p-8 text-white">
+        No questions available for this game.
+      </div>
+    );
   }
 
   const question = questions[currentQuestion];
@@ -107,10 +113,15 @@ export default function QuizGame() {
         <Card className="bg-gray-900 border-gray-800 w-full max-w-md text-center">
           <CardContent className="p-8">
             <Trophy className="h-16 w-16 text-yellow-500 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-white mb-4">Game Complete!</h2>
-            <div className="text-4xl font-bold text-green-400 mb-6">{score} Points</div>
+            <h2 className="text-2xl font-bold text-white mb-4">
+              Game Complete!
+            </h2>
+            <div className="text-4xl font-bold text-green-400 mb-6">
+              {score} Points
+            </div>
             <div className="text-gray-300 mb-6">
-              You answered {score / 10} out of {questions.length} questions correctly!
+              You answered {score / 10} out of {questions.length} questions
+              correctly!
             </div>
             <div className="flex gap-4">
               <Button
@@ -146,7 +157,9 @@ export default function QuizGame() {
             >
               <ArrowLeft className="h-5 w-5" />
             </Button>
-            <Badge className="bg-gray-800 text-white text-lg px-4 py-2">Score: {score}</Badge>
+            <Badge className="bg-gray-800 text-white text-lg px-4 py-2">
+              Score: {score}
+            </Badge>
           </div>
           <div className="text-gray-400">
             Question {currentQuestion + 1} of {questions.length}
@@ -156,7 +169,9 @@ export default function QuizGame() {
         {/* Question Card */}
         <Card className="bg-gray-900 border-gray-800 mb-8">
           <CardContent className="p-8">
-            <h2 className="text-2xl font-semibold text-white mb-8">{question.text}</h2>
+            <h2 className="text-2xl font-semibold text-white mb-8">
+              {question.text}
+            </h2>
 
             {/* Choices */}
             <div className="grid gap-4">
@@ -166,14 +181,21 @@ export default function QuizGame() {
 
                 if (showResult) {
                   if (id === question.correctAnswer) {
-                    buttonClass = "w-full p-6 text-left bg-green-800 border-green-600 text-white";
-                  } else if (id === selectedAnswer && id !== question.correctAnswer) {
-                    buttonClass = "w-full p-6 text-left bg-red-800 border-red-600 text-white";
+                    buttonClass =
+                      "w-full p-6 text-left bg-green-800 border-green-600 text-white";
+                  } else if (
+                    id === selectedAnswer &&
+                    id !== question.correctAnswer
+                  ) {
+                    buttonClass =
+                      "w-full p-6 text-left bg-red-800 border-red-600 text-white";
                   } else {
-                    buttonClass = "w-full p-6 text-left bg-gray-800 border-gray-700 text-gray-400";
+                    buttonClass =
+                      "w-full p-6 text-left bg-gray-800 border-gray-700 text-gray-400";
                   }
                 } else if (selectedAnswer === id) {
-                  buttonClass = "w-full p-6 text-left bg-blue-800 border-blue-600 text-white";
+                  buttonClass =
+                    "w-full p-6 text-left bg-blue-800 border-blue-600 text-white";
                 }
 
                 return (
@@ -185,7 +207,9 @@ export default function QuizGame() {
                     disabled={showResult}
                   >
                     <div className="flex items-center gap-4">
-                      <span className="font-bold text-lg">{id.toUpperCase()}.</span>
+                      <span className="font-bold text-lg">
+                        {id.toUpperCase()}.
+                      </span>
                       <span className="text-lg">{text}</span>
                     </div>
                   </Button>
@@ -211,15 +235,23 @@ export default function QuizGame() {
               <div className="mt-8 text-center">
                 <div
                   className={`text-xl font-semibold ${
-                    selectedAnswer === question.correctAnswer ? "text-green-400" : "text-red-400"
+                    selectedAnswer === question.correctAnswer
+                      ? "text-green-400"
+                      : "text-red-400"
                   }`}
                 >
-                  {selectedAnswer === question.correctAnswer ? "Correct! +10 points" : "Incorrect!"}
+                  {selectedAnswer === question.correctAnswer
+                    ? "Correct! +10 points"
+                    : "Incorrect!"}
                 </div>
                 {currentQuestion < questions.length - 1 ? (
-                  <div className="text-gray-400 mt-2">Next question in 2 seconds...</div>
+                  <div className="text-gray-400 mt-2">
+                    Next question in 2 seconds...
+                  </div>
                 ) : (
-                  <div className="text-gray-400 mt-2">Calculating final score...</div>
+                  <div className="text-gray-400 mt-2">
+                    Calculating final score...
+                  </div>
                 )}
               </div>
             )}
