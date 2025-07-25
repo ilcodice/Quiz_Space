@@ -1,17 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button } from "../../../../src/components/ui/button";
-import { Card, CardContent } from "../../../../src/components/ui/card";
-import { Badge } from "../../../../src/components/ui/badge";
+import { Button } from "../../../../client/src/components/ui/button";
+import { Card, CardContent } from "../../../../client/src/components/ui/card";
+import { Badge } from "../../../../client/src/components/ui/badge";
 import { ArrowLeft, Trophy } from "lucide-react";
 import React from "react";
 import { useParams, useRouter } from "next/navigation";
 
-type Choice = {
-  id: string;
-  text: string;
-};
+
 
 type Question = {
   text: string;
